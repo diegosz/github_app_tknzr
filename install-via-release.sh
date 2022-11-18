@@ -1,51 +1,71 @@
 #!/bin/bash
 #
-# This script downloads a binary of `go-github-apps` into the current working directory with adding execution bit.
-# After that, you can move the binary to an arbitrary directory like /usr/local/bin.
+# This script downloads a binary release of `github_app_tknzr` into the current working directory adding execution bit.
+# After that, the binary is moved to /usr/local/bin.
 #
+# Usage:
+#
+# Define the environmental variable INSTALL_RELEASE_TOKEN with the installation token and pass the
+# desired version number with -v flag. If 'latest' is passed as version, the latest version is
+# installed.
+#
+# For example: env INSTALL_RELEASE_TOKEN="ghs_XXX" bash ./install-via-release.sh -v latest
+#
+# The INSTALL_RELEASE_TOKEN needs the be generated using a GitHub App with the following
+# permissions:
+#
+# - Repository Contents: Read
+# - Repository Metadata: Read
+# - Repository Packages: Read
+# - Repository Single File: Read Path: install-via-release.sh
+#
+# https://docs.github.com/en/rest/releases/assets#get-a-release-asset
 
 VERSION=
 
-usage() {
+function usage() {
   echo "usage: $0 -v VERSION" >&2
 }
 
-get_arch() {
+function get_arch() {
   case "$(uname -m)" in
-    aarch64|arm64)
-      echo "arm64"
-      ;;
-    x86_64)
-      echo "amd64"
-      ;;
-    *)
-      echo "Currently $(uname -m) isn't supported. PR is welcome." >&2
-      exit 1
-      ;;
+  aarch64 | arm64)
+    echo "arm64"
+    ;;
+  x86_64)
+    echo "amd64"
+    ;;
+  *)
+    echo "Currently $(uname -m) isn't supported. PR is welcome." >&2
+    exit 1
+    ;;
   esac
 }
 
-get_os() {
+function get_os() {
   case "$(uname -s)" in
-    Linux)
-      echo linux
-      ;;
-    Darwin)
-      echo darwin
-      ;;
-    *)
-      echo "Currently $(uname -s) isn't supported. PR is welcome." >&2
-      exit 1
-      ;;
+  Linux)
+    echo linux
+    ;;
+  Darwin)
+    echo darwin
+    ;;
+  *)
+    echo "Currently $(uname -s) isn't supported. PR is welcome." >&2
+    exit 1
+    ;;
   esac
 }
 
 while getopts hv: OPT; do
   case $OPT in
-    v)
-      VERSION=$OPTARG
-      ;;
-    *|h) usage; exit 1 ;;
+  v)
+    VERSION=$OPTARG
+    ;;
+  * | h)
+    usage
+    exit 1
+    ;;
   esac
 done
 
@@ -56,8 +76,8 @@ if [ -z "${VERSION}" ]; then
   exit 1
 fi
 
-BASE_URL="https://github.com/nabeken/go-github-apps/releases/download/${VERSION}"
-URL="${BASE_URL}/go-github-apps_${VERSION#v}_$(get_os)_$(get_arch).tar.gz"
+BASE_URL="https://github.com/diegosz/github_app_tknzr/releases/download/${VERSION}"
+URL="${BASE_URL}/github_app_tknzr_${VERSION}_$(get_os)_$(get_arch).tar.gz"
 
 shift $((OPTIND - 1))
 
@@ -68,10 +88,11 @@ pushd $DIR > /dev/null
 echo "Downloading ${URL} into ${DIR}" >&2
   curl --fail -sSL -O "${URL}"
   if [ $? -ne 0 ]; then
-    echo "unable to download via Github Releases" >&2
+    echo "Unable to download via Github Releases" >&2
     exit 1
   fi
 popd > /dev/null
 
 FN="$(basename ${URL})"
-tar xvf "${DIR}/${FN}" go-github-apps || exit 1
+tar xvf "${DIR}/${FN}" github_app_tknzr || exit 1
+

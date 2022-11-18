@@ -13,14 +13,11 @@ import (
 )
 
 var (
+	app     = "github_app_tknzr"
 	version = "dev"
 	commit  = "none"
 	date    = "unknown"
 )
-
-func versionInfo() {
-	fmt.Fprintf(os.Stderr, "Version: %s\nCommit: %s\nBuiltAt: %s\n", version, commit, date)
-}
 
 func main() {
 	appID := flag.Int64("app-id", 0, "App ID")
@@ -39,9 +36,9 @@ func main() {
 	flag.Parse()
 
 	// See https://github.com/golang/go/issues/37533
-	// I decided to implement -version flag to return 0
+	// Decided to implement -version flag to return 0
 	if *showVersion {
-		flag.Usage()
+		versionInfo()
 		os.Exit(0)
 	}
 
@@ -56,7 +53,7 @@ func main() {
 		log.Fatal("Please populate GITHUB_PRIV_KEY environment variable with the private key for the App")
 	}
 
-	// Wrap the shared transport for use with the app ID 1 authenticating with installation ID 99.
+	// Wrap the shared transport for use with the app ID authenticating with installation ID.
 	itr, err := ghinstallation.New(http.DefaultTransport, *appID, *instID, []byte(key))
 	if err != nil {
 		log.Fatal(err)
@@ -67,7 +64,7 @@ func main() {
 
 	token, err := itr.Token(ctx)
 	if err != nil {
-		log.Fatalf("unable to get github token: %s", err)
+		log.Fatalf("Unable to get github token: %s", err)
 	}
 
 	if *export {
@@ -79,4 +76,8 @@ func main() {
 
 func showExport(token string) {
 	fmt.Printf("export GITHUB_TOKEN=%s\n", token)
+}
+
+func versionInfo() {
+	fmt.Fprintf(os.Stderr, "%s Version: %s Commit: %s BuiltAt: %s\n", app, version, commit, date)
 }

@@ -12,6 +12,8 @@ jobs:
   test_action:
     name: Run
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - name: Get GitHub App Token

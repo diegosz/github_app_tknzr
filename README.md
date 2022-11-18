@@ -78,9 +78,9 @@ Settings > Developer > settings > GitHub App > About item
 
 You can get the number from the installed app:
 Settings > Developer > settings > GitHub Apps > Select the app
-Install App > Select the organization wanted
+Select the installation wanted
 Copy the Installation ID from the URL
 
-For Example: https://github.com/owner/repo/settings/installations/12345678
+For Example: https://github.com/settings/installations/12345678
 
 Installation ID is `12345678`

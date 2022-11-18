@@ -1,5 +1,5 @@
 name: "GitHub App Tokenizer"
-description: "Action to generate GitHub App installation token"
+description: "Action to generate GitHub App Installation Token"
 inputs:
   version:
     description: "A version to install"

@@ -2,6 +2,7 @@ name: Test Action
 
 # Only trigger, when the release workflow succeeded
 on:
+  workflow_dispatch:
   workflow_run:
     workflows: ["Release"]
     types:
